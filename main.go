@@ -1,17 +1,31 @@
 package main
 
 import (
+	"connpass-keyword-bot-v1/config"
 	"connpass-keyword-bot-v1/infrastructure/repository"
 	"connpass-keyword-bot-v1/interfaces/handler"
 	"connpass-keyword-bot-v1/usecase"
-	"net/http"
+	"fmt"
 )
 
 func main() {
-	eventRepository := repository.NewEventRepository("https://connpass.com/api/v1")
-	eventUsecase := usecase.NewEventUsecase(eventRepository)
-	eventHandler := handler.NewEventHandler(eventUsecase)
+	config.LoadConfig()
 
-	http.HandleFunc("/events", eventHandler.GetEventsByKeyword)
-	http.ListenAndServe(":8080", nil)
+	eventRepository := repository.NewEventRepository(config.Config.ConnpassURL)
+	messageRepository := repository.NewMessageRepository(
+		config.Config.UserID,
+		config.Config.ChannelSecret,
+		config.Config.ChannelAccessToken,
+	)
+
+	notificationUsecase := usecase.NewNotificationUsecase(
+		eventRepository,
+		messageRepository,
+	)
+
+	notificationHandler := handler.NewNotificationHandler(notificationUsecase)
+	if err := notificationHandler.PostNotification(); err != nil {
+		fmt.Println(err)
+	}
+
 }

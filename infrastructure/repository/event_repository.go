@@ -1,7 +1,7 @@
 package repository
 
 import (
-	domain "connpass-keyword-bot-v1/domain/event"
+	"connpass-keyword-bot-v1/domain/event"
 	"encoding/json"
 	"net/http"
 )
@@ -11,14 +11,14 @@ type EventRepository struct {
 	Client  *http.Client
 }
 
-func NewEventRepository(baseURL string) domain.EventRepository {
+func NewEventRepository(baseURL string) event.EventRepository {
 	return &EventRepository{
 		BaseURL: baseURL,
 		Client:  http.DefaultClient,
 	}
 }
 
-func (repo *EventRepository) GetEventsByKeyword(keyword string) ([]domain.Event, error) {
+func (repo *EventRepository) GetEventsByKeyword(keyword string) ([]event.Event, error) {
 	url := repo.BaseURL + "/event/?keyword_or=" + keyword + "&order=3"
 	resp, err := repo.Client.Get(url)
 	if err != nil {
@@ -27,7 +27,7 @@ func (repo *EventRepository) GetEventsByKeyword(keyword string) ([]domain.Event,
 	defer resp.Body.Close()
 
 	var response struct {
-		Events []domain.Event `json:"events"`
+		Events []event.Event `json:"events"`
 	}
 
 	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
