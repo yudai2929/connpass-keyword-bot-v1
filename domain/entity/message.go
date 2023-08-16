@@ -1,4 +1,4 @@
-package message
+package entity
 
 type Message struct {
 	Text string

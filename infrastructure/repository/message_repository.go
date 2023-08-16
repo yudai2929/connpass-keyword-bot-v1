@@ -1,12 +1,13 @@
 package repository
 
 import (
-	"connpass-keyword-bot-v1/domain/message"
+	"connpass-keyword-bot-v1/domain/entity"
+	"connpass-keyword-bot-v1/domain/repository"
 
 	"github.com/line/line-bot-sdk-go/linebot"
 )
 
-type MessageRepository struct {
+type MessageRepositoryImpl struct {
 	ID                 string
 	ChannelSecret      string
 	ChannelAccessToken string
@@ -14,15 +15,15 @@ type MessageRepository struct {
 
 func NewMessageRepository(
 	id string, ChannelSecret string, channelAccessToken string,
-) message.MessageRepository {
-	return &MessageRepository{
+) repository.MessageRepository {
+	return &MessageRepositoryImpl{
 		ID:                 id,
 		ChannelSecret:      ChannelSecret,
 		ChannelAccessToken: channelAccessToken,
 	}
 }
 
-func (repo *MessageRepository) SendMessage(messages []message.Message) error {
+func (repo *MessageRepositoryImpl) SendMessage(messages []entity.Message) error {
 	bot, err := linebot.New(
 		repo.ChannelSecret,
 		repo.ChannelAccessToken,

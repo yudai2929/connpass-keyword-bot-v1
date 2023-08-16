@@ -1,8 +1,8 @@
 package usecase
 
 import (
-	"connpass-keyword-bot-v1/domain/event"
-	"connpass-keyword-bot-v1/domain/message"
+	"connpass-keyword-bot-v1/domain/entity"
+	"connpass-keyword-bot-v1/domain/repository"
 )
 
 type NotificationUsecase interface {
@@ -10,11 +10,11 @@ type NotificationUsecase interface {
 }
 
 type notificationUsecase struct {
-	eventRepo   event.EventRepository
-	messageRepo message.MessageRepository
+	eventRepo   repository.EventRepository
+	messageRepo repository.MessageRepository
 }
 
-func NewNotificationUsecase(eventRepo event.EventRepository, messageRepo message.MessageRepository,
+func NewNotificationUsecase(eventRepo repository.EventRepository, messageRepo repository.MessageRepository,
 ) NotificationUsecase {
 	return &notificationUsecase{
 		eventRepo:   eventRepo,
@@ -28,17 +28,17 @@ func (uc *notificationUsecase) PostNotification() error {
 	if err != nil {
 		return err
 	}
-	messages := []message.Message{}
+	messages := []entity.Message{}
 
 	for _, event := range events {
-		messages = append(messages, message.Message{
+		messages = append(messages, entity.Message{
 			Text: event.Title + "\n" + event.EventURL,
 		})
 	}
 
-	if err := uc.messageRepo.SendMessage(messages[:3]); err != nil {
-		return err
-	}
+	// if err := uc.messageRepo.SendMessage(messages[:3]); err != nil {
+	// 	return err
+	// }
 
 	return nil
 }
