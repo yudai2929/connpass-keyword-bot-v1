@@ -1,8 +1,7 @@
 package handler
 
 import (
-	"connpass-keyword-bot-v1/src/usecase"
-	"fmt"
+	"connpass-keyword-bot-v1/usecase"
 )
 
 type NotificationHandler struct {
@@ -18,7 +17,6 @@ func NewNotificationHandler(notificationUsecase usecase.NotificationUsecase) *No
 func (h *NotificationHandler) PostNotification() error {
 	err := h.NotificationUsecase.PostNotification()
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
 	return nil
