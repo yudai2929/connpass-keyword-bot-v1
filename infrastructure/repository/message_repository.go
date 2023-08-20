@@ -28,18 +28,24 @@ func (repo *MessageRepositoryImpl) SendMessage(messages []entity.Message) error 
 		repo.ChannelSecret,
 		repo.ChannelAccessToken,
 	)
-
 	if err != nil {
 		return err
 	}
 
-	var lineMessages []linebot.SendingMessage
-	for _, message := range messages {
-		lineMessages = append(lineMessages, linebot.NewTextMessage(message.Text))
-	}
+	const maxConcurrentMessages = 5
+	concurrentMessages := make(chan linebot.SendingMessage, maxConcurrentMessages)
 
-	if _, err := bot.PushMessage(repo.ID, lineMessages...).Do(); err != nil {
-		return err
+	go func() {
+		for _, message := range messages {
+			concurrentMessages <- linebot.NewTextMessage(message.Text)
+		}
+		close(concurrentMessages)
+	}()
+
+	for message := range concurrentMessages {
+		if _, err := bot.PushMessage(repo.ID, message).Do(); err != nil {
+			return err
+		}
 	}
 
 	return nil

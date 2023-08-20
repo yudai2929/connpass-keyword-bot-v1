@@ -12,6 +12,8 @@ var Config struct {
 	UserID             string
 	ChannelSecret      string
 	ChannelAccessToken string
+	SupabaseURL        string
+	SupabaseKey        string
 }
 
 func LoadConfig() {
@@ -25,5 +27,6 @@ func LoadConfig() {
 	Config.UserID = os.Getenv("USER_ID")
 	Config.ChannelSecret = os.Getenv("CHANNEL_SECRET")
 	Config.ChannelAccessToken = os.Getenv("CHANNEL_ACCESS_TOKEN")
-
+	Config.SupabaseURL = os.Getenv("SUPABASE_URL")
+	Config.SupabaseKey = os.Getenv("SUPABASE_KEY")
 }

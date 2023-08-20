@@ -3,8 +3,8 @@ package repository
 import (
 	"connpass-keyword-bot-v1/domain/entity"
 	"connpass-keyword-bot-v1/domain/repository"
+	"connpass-keyword-bot-v1/infrastructure/response"
 	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
@@ -20,23 +20,39 @@ func NewEventRepository(baseURL string) repository.EventRepository {
 	}
 }
 
-func (repo *EventRepositoryImpl) GetEventsByKeyword(keyword string) ([]entity.Event, error) {
-	url := repo.BaseURL + "/event/?keyword_or=" + keyword + "&order=3"
+func (repo *EventRepositoryImpl) GetEventsByKeyword(keywords []string) ([]entity.Event, error) {
+	keyword := convertKeywordsToString(keywords)
+
+	url := repo.BaseURL + "/event/?keyword_or=" + keyword + "&order=3" + "&count=20"
 	resp, err := repo.Client.Get(url)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
 
-	var response struct {
-		Events []entity.Event `json:"events"`
-	}
+	response := response.EventResponse{}
 
 	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 		return nil, err
 	}
 
-	fmt.Println(response.Events[0].Address)
+	events := []entity.Event{}
 
-	return response.Events, nil
+	for _, event := range response.Events {
+		events = append(events, entity.Event{
+			EventID:  event.EventID,
+			Title:    event.Title,
+			EventURL: event.EventURL,
+		})
+	}
+
+	return events, nil
+}
+
+func convertKeywordsToString(keywords []string) string {
+	keyword := ""
+	for _, k := range keywords {
+		keyword += k + ","
+	}
+	return keyword
 }

@@ -11,6 +11,10 @@ import (
 func main() {
 	config.LoadConfig()
 
+	notifiedEventRepository := repository.NewNotifiedEventRepository(
+		config.Config.SupabaseURL,
+		config.Config.SupabaseKey,
+	)
 	eventRepository := repository.NewEventRepository(config.Config.ConnpassURL)
 	messageRepository := repository.NewMessageRepository(
 		config.Config.UserID,
@@ -21,6 +25,7 @@ func main() {
 	notificationUsecase := usecase.NewNotificationUsecase(
 		eventRepository,
 		messageRepository,
+		notifiedEventRepository,
 	)
 
 	notificationHandler := handler.NewNotificationHandler(notificationUsecase)
