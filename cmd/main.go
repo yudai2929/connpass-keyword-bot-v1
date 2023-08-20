@@ -1,10 +1,10 @@
 package main
 
 import (
-	"connpass-keyword-bot-v1/config"
-	"connpass-keyword-bot-v1/infrastructure/repository"
-	"connpass-keyword-bot-v1/interfaces/handler"
-	"connpass-keyword-bot-v1/usecase"
+	"connpass-keyword-bot-v1/src/config"
+	"connpass-keyword-bot-v1/src/infrastructure/repository"
+	"connpass-keyword-bot-v1/src/interfaces/handler"
+	"connpass-keyword-bot-v1/src/usecase"
 	"fmt"
 )
 

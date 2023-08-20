@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"connpass-keyword-bot-v1/usecase"
+	"connpass-keyword-bot-v1/src/usecase"
 	"fmt"
 )
 
