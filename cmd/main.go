@@ -1,15 +1,18 @@
 package main
 
 import (
-	"connpass-keyword-bot-v1/config"
-	"connpass-keyword-bot-v1/infrastructure/repository"
-	"connpass-keyword-bot-v1/interfaces/handler"
-	"connpass-keyword-bot-v1/usecase"
+	"connpass-keyword-bot-v1/pkg/config"
+	"connpass-keyword-bot-v1/pkg/handler"
+	"connpass-keyword-bot-v1/pkg/infrastructure/repository"
+	"connpass-keyword-bot-v1/pkg/usecase"
 	"fmt"
 )
 
 func main() {
-	config.LoadConfig()
+
+	if err := config.LoadConfig(); err != nil {
+		panic(err)
+	}
 
 	notifiedEventRepository := repository.NewNotifiedEventRepository(
 		config.Config.SupabaseURL,

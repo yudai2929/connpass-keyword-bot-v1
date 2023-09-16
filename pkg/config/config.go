@@ -16,17 +16,19 @@ var Config struct {
 	SupabaseKey        string
 }
 
-func LoadConfig() {
+func LoadConfig() error {
 	err := godotenv.Load()
 
 	if err != nil {
-		fmt.Println("Error loading .env file")
-		return
+		return fmt.Errorf("failed to load .env file")
 	}
+
 	Config.ConnpassURL = os.Getenv("CONNPASS_URL")
 	Config.UserID = os.Getenv("USER_ID")
 	Config.ChannelSecret = os.Getenv("CHANNEL_SECRET")
 	Config.ChannelAccessToken = os.Getenv("CHANNEL_ACCESS_TOKEN")
 	Config.SupabaseURL = os.Getenv("SUPABASE_URL")
 	Config.SupabaseKey = os.Getenv("SUPABASE_KEY")
+
+	return nil
 }

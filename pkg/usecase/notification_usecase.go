@@ -1,8 +1,8 @@
 package usecase
 
 import (
-	"connpass-keyword-bot-v1/domain/entity"
-	"connpass-keyword-bot-v1/domain/repository"
+	"connpass-keyword-bot-v1/pkg/domain/entity"
+	"connpass-keyword-bot-v1/pkg/domain/repository"
 )
 
 type NotificationUsecase interface {

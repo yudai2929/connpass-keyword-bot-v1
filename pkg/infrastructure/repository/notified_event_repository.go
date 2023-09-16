@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"connpass-keyword-bot-v1/domain/repository"
+	"connpass-keyword-bot-v1/pkg/domain/repository"
 
 	"github.com/nedpals/supabase-go"
 )

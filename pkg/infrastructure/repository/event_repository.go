@@ -1,9 +1,9 @@
 package repository
 
 import (
-	"connpass-keyword-bot-v1/domain/entity"
-	"connpass-keyword-bot-v1/domain/repository"
-	"connpass-keyword-bot-v1/infrastructure/response"
+	"connpass-keyword-bot-v1/pkg/domain/entity"
+	"connpass-keyword-bot-v1/pkg/domain/repository"
+	"connpass-keyword-bot-v1/pkg/infrastructure/response"
 	"encoding/json"
 	"net/http"
 )

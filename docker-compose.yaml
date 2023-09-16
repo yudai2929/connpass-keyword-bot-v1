@@ -1,10 +1,11 @@
 version: "3"
 services:
   go:
-    build: ./build
-    tty: true
+    build:
+      context: .
+      dockerfile: Dockerfile
     volumes:
-      - type: bind
-        source: "./src"
-        target: "/go/src/app"
-    working_dir: /go/src/app
+      - .:/go/src/app
+    tty: true
+    env_file:
+      - .env
