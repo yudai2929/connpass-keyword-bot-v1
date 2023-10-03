@@ -1,9 +1,8 @@
-FROM golang:1.20
+FROM golang:1.21
 
-WORKDIR /go/src/app
+WORKDIR /usr/src/app
 
-COPY . .
-RUN go mod download
-
-# CMD ["go", "run", "./"]
+# pre-copy/cache go.mod for pre-downloading dependencies and only redownloading them in subsequent builds if they change
+COPY go.mod go.sum ./
+RUN go mod download && go mod verify
 
