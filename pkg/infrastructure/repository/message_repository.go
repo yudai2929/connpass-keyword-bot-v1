@@ -23,7 +23,7 @@ func NewMessageRepository(
 	}
 }
 
-func (repo *MessageRepositoryImpl) SendMessage(messages []entity.Message) error {
+func (repo *MessageRepositoryImpl) Send(messages []entity.Message) error {
 	bot, err := linebot.New(
 		repo.ChannelSecret,
 		repo.ChannelAccessToken,

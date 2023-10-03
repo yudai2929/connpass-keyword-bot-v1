@@ -3,6 +3,7 @@ package usecase
 import (
 	"connpass-keyword-bot-v1/pkg/domain/entity"
 	"connpass-keyword-bot-v1/pkg/domain/repository"
+	"connpass-keyword-bot-v1/pkg/utils"
 )
 
 type NotificationUsecase interface {
@@ -27,7 +28,7 @@ func NewNotificationUsecase(eventRepo repository.EventRepository, messageRepo re
 func (uc *notificationUsecase) PostNotification() error {
 	keywords := []string{"名古屋", "愛知"}
 
-	events, err := uc.eventRepo.GetEventsByKeyword(keywords)
+	events, err := uc.eventRepo.GetByKeyword(keywords)
 
 	if err != nil {
 		return err
@@ -35,7 +36,7 @@ func (uc *notificationUsecase) PostNotification() error {
 
 	eventIDs := getEventIDs(events)
 
-	notifiedEventIDs, err := uc.notifiedEventRepo.FindNotifiedEventsByEventIDs(eventIDs)
+	notifiedEventIDs, err := uc.notifiedEventRepo.FindByEventIDs(eventIDs)
 
 	if err != nil {
 		return err
@@ -45,13 +46,13 @@ func (uc *notificationUsecase) PostNotification() error {
 
 	messages := createMessage(notNotifiedEvents)
 
-	if err := uc.messageRepo.SendMessage(messages); err != nil {
+	if err := uc.messageRepo.Send(messages); err != nil {
 		return err
 	}
 
 	notNotifiedEventIDs := getEventIDs(notNotifiedEvents)
 
-	if err := uc.notifiedEventRepo.SaveNotifiedEvents(notNotifiedEventIDs); err != nil {
+	if err := uc.notifiedEventRepo.Save(notNotifiedEventIDs); err != nil {
 		return err
 	}
 
@@ -72,7 +73,7 @@ func findNotNotifiedEvents(events []entity.Event, notifiedEventIDs []int) []enti
 	notNotifiedEvents := []entity.Event{}
 
 	for _, event := range events {
-		if !contains(notifiedEventIDs, event.EventID) {
+		if !utils.Contains(notifiedEventIDs, event.EventID) {
 			notNotifiedEvents = append(notNotifiedEvents, event)
 		}
 	}
@@ -90,14 +91,4 @@ func createMessage(events []entity.Event) []entity.Message {
 	}
 
 	return messages
-}
-
-func contains(slice []int, element int) bool {
-	for _, item := range slice {
-		if item == element {
-			return true
-		}
-	}
-
-	return false
 }

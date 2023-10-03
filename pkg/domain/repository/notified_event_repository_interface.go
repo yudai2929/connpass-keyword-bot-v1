@@ -1,6 +1,6 @@
 package repository
 
 type NotifiedEventRepository interface {
-	SaveNotifiedEvents(eventIDs []int) error
-	FindNotifiedEventsByEventIDs(eventIDs []int) ([]int, error)
+	Save(eventIDs []int) error
+	FindByEventIDs(eventIDs []int) ([]int, error)
 }

@@ -20,7 +20,7 @@ func NewEventRepository(baseURL string) repository.EventRepository {
 	}
 }
 
-func (repo *EventRepositoryImpl) GetEventsByKeyword(keywords []string) ([]entity.Event, error) {
+func (repo *EventRepositoryImpl) GetByKeyword(keywords []string) ([]entity.Event, error) {
 	keyword := convertKeywordsToString(keywords)
 
 	url := repo.BaseURL + "/event/?keyword_or=" + keyword + "&order=3" + "&count=20"

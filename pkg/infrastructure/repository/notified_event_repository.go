@@ -20,7 +20,7 @@ type notifiedEvent struct {
 	EventID int `json:"event_id"`
 }
 
-func (repo *NotifiedEventRepositoryImpl) SaveNotifiedEvents(eventIDs []int) error {
+func (repo *NotifiedEventRepositoryImpl) Save(eventIDs []int) error {
 	tableName := "notified_events"
 
 	var rows []notifiedEvent
@@ -41,7 +41,7 @@ func (repo *NotifiedEventRepositoryImpl) SaveNotifiedEvents(eventIDs []int) erro
 	return nil
 }
 
-func (repo *NotifiedEventRepositoryImpl) FindNotifiedEventsByEventIDs(
+func (repo *NotifiedEventRepositoryImpl) FindByEventIDs(
 	eventIDs []int,
 ) ([]int, error) {
 
