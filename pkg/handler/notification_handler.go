@@ -2,6 +2,10 @@ package handler
 
 import (
 	"connpass-keyword-bot-v1/pkg/usecase"
+	"context"
+	"log"
+
+	"github.com/cloudevents/sdk-go/v2/event"
 )
 
 type NotificationHandler struct {
@@ -14,10 +18,11 @@ func NewNotificationHandler(notificationUsecase usecase.NotificationUsecase) *No
 	}
 }
 
-func (h *NotificationHandler) PostNotification() error {
-	err := h.NotificationUsecase.PostNotification()
-	if err != nil {
+func (h *NotificationHandler) PostNotification(ctx context.Context, e event.Event) error {
+	log.Printf("START Event Context: %+v\n", e.Context)
+	if err := h.NotificationUsecase.PostNotification(); err != nil {
 		return err
 	}
+	log.Printf("END Event Context: %+v\n", e.Context)
 	return nil
 }
