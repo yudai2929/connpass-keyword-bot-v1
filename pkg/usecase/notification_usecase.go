@@ -1,13 +1,13 @@
 package usecase
 
 import (
-	"connpass-keyword-bot-v1/pkg/domain/entity"
-	"connpass-keyword-bot-v1/pkg/domain/repository"
-	"connpass-keyword-bot-v1/pkg/utils"
+	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/domain/entity"
+	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/domain/repository"
+	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/utils"
 )
 
 type NotificationUsecase interface {
-	PostNotification() error
+	Send() error
 }
 
 type notificationUsecase struct {
@@ -25,7 +25,7 @@ func NewNotificationUsecase(eventRepo repository.EventRepository, messageRepo re
 	}
 }
 
-func (uc *notificationUsecase) PostNotification() error {
+func (uc *notificationUsecase) Send() error {
 	keywords := []string{"名古屋", "愛知"}
 
 	events, err := uc.eventRepo.GetByKeyword(keywords)
