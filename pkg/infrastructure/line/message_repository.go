@@ -1,8 +1,8 @@
-package repository
+package line
 
 import (
-	"connpass-keyword-bot-v1/pkg/domain/entity"
-	"connpass-keyword-bot-v1/pkg/domain/repository"
+	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/domain/entity"
+	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/domain/repository"
 
 	"github.com/line/line-bot-sdk-go/linebot"
 )

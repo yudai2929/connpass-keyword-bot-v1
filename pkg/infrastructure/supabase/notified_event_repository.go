@@ -1,18 +1,19 @@
-package repository
+package supabase
 
 import (
-	"connpass-keyword-bot-v1/pkg/domain/repository"
+	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/domain/repository"
+	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/errors"
 
 	"github.com/nedpals/supabase-go"
 )
 
 type NotifiedEventRepositoryImpl struct {
-	Client *supabase.Client
+	client *supabase.Client
 }
 
-func NewNotifiedEventRepository(supabaseURL, supabaseKey string) repository.NotifiedEventRepository {
+func NewNotifiedEventRepository(client *supabase.Client) repository.NotifiedEventRepository {
 	return &NotifiedEventRepositoryImpl{
-		Client: supabase.CreateClient(supabaseURL, supabaseKey),
+		client,
 	}
 }
 
@@ -32,7 +33,7 @@ func (repo *NotifiedEventRepositoryImpl) Save(eventIDs []int) error {
 
 	var result []notifiedEvent
 
-	err := repo.Client.DB.From(tableName).Insert(rows).Execute(&result)
+	err := repo.client.DB.From(tableName).Insert(rows).Execute(&result)
 
 	if err != nil {
 		return err
@@ -49,10 +50,10 @@ func (repo *NotifiedEventRepositoryImpl) FindByEventIDs(
 
 	var result []notifiedEvent
 
-	err := repo.Client.DB.From(tableName).Select("*").Execute(&result)
+	err := repo.client.DB.From(tableName).Select("*").Execute(&result)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to get notified events")
 	}
 
 	var notifiedEventIDs []int
