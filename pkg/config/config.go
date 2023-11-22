@@ -7,7 +7,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-var Config struct {
+var Env struct {
 	ConnpassURL        string
 	UserID             string
 	ChannelSecret      string
@@ -23,12 +23,12 @@ func LoadConfig() error {
 		return fmt.Errorf("failed to load .env file")
 	}
 
-	Config.ConnpassURL = os.Getenv("CONNPASS_URL")
-	Config.UserID = os.Getenv("USER_ID")
-	Config.ChannelSecret = os.Getenv("CHANNEL_SECRET")
-	Config.ChannelAccessToken = os.Getenv("CHANNEL_ACCESS_TOKEN")
-	Config.SupabaseURL = os.Getenv("SUPABASE_URL")
-	Config.SupabaseKey = os.Getenv("SUPABASE_KEY")
+	Env.ConnpassURL = os.Getenv("CONNPASS_URL")
+	Env.UserID = os.Getenv("USER_ID")
+	Env.ChannelSecret = os.Getenv("CHANNEL_SECRET")
+	Env.ChannelAccessToken = os.Getenv("CHANNEL_ACCESS_TOKEN")
+	Env.SupabaseURL = os.Getenv("SUPABASE_URL")
+	Env.SupabaseKey = os.Getenv("SUPABASE_KEY")
 
 	return nil
 }
