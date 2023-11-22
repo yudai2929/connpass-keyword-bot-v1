@@ -2,9 +2,6 @@ package config
 
 import (
 	"os"
-
-	"github.com/joho/godotenv"
-	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/errors"
 )
 
 type EnvVars struct {
@@ -19,11 +16,6 @@ type EnvVars struct {
 var Env *EnvVars = &EnvVars{}
 
 func Load() error {
-	err := godotenv.Load()
-
-	if err != nil {
-		return errors.Wrap(err, "failed to load .env file")
-	}
 
 	Env.ConnpassURL = os.Getenv("CONNPASS_URL")
 	Env.UserID = os.Getenv("USER_ID")
