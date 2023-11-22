@@ -1,6 +1,7 @@
 package line
 
 import (
+	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/config"
 	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/domain/entity"
 	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/domain/repository"
 
@@ -8,25 +9,23 @@ import (
 )
 
 type MessageRepositoryImpl struct {
-	ID                 string
-	ChannelSecret      string
-	ChannelAccessToken string
+	id                 string
+	channelSecret      string
+	channelAccessToken string
 }
 
-func NewMessageRepository(
-	id string, ChannelSecret string, channelAccessToken string,
-) repository.MessageRepository {
+func NewMessageRepository() repository.MessageRepository {
 	return &MessageRepositoryImpl{
-		ID:                 id,
-		ChannelSecret:      ChannelSecret,
-		ChannelAccessToken: channelAccessToken,
+		config.Env.UserID,
+		config.Env.ChannelSecret,
+		config.Env.ChannelAccessToken,
 	}
 }
 
 func (repo *MessageRepositoryImpl) Send(messages []entity.Message) error {
 	bot, err := linebot.New(
-		repo.ChannelSecret,
-		repo.ChannelAccessToken,
+		repo.channelSecret,
+		repo.channelAccessToken,
 	)
 	if err != nil {
 		return err
@@ -43,7 +42,7 @@ func (repo *MessageRepositoryImpl) Send(messages []entity.Message) error {
 	}()
 
 	for message := range concurrentMessages {
-		if _, err := bot.PushMessage(repo.ID, message).Do(); err != nil {
+		if _, err := bot.PushMessage(repo.id, message).Do(); err != nil {
 			return err
 		}
 	}

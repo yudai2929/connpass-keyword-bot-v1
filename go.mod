@@ -30,4 +30,5 @@ require (
 require (
 	github.com/cockroachdb/errors v1.11.1
 	github.com/line/line-bot-sdk-go v7.8.0+incompatible
+	go.uber.org/dig v1.17.1
 )

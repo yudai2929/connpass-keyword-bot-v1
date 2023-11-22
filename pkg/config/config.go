@@ -1,13 +1,13 @@
 package config
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/joho/godotenv"
+	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/errors"
 )
 
-var Env struct {
+type EnvVars struct {
 	ConnpassURL        string
 	UserID             string
 	ChannelSecret      string
@@ -16,11 +16,13 @@ var Env struct {
 	SupabaseKey        string
 }
 
-func LoadConfig() error {
+var Env *EnvVars = &EnvVars{}
+
+func Load() error {
 	err := godotenv.Load()
 
 	if err != nil {
-		return fmt.Errorf("failed to load .env file")
+		return errors.Wrap(err, "failed to load .env file")
 	}
 
 	Env.ConnpassURL = os.Getenv("CONNPASS_URL")

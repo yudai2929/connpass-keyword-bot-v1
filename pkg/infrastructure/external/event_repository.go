@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/config"
 	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/domain/entity"
 	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/domain/repository"
 )
@@ -13,9 +14,9 @@ type EventRepositoryImpl struct {
 	Client  *http.Client
 }
 
-func NewEventRepository(baseURL string) repository.EventRepository {
+func NewEventRepository() repository.EventRepository {
 	return &EventRepositoryImpl{
-		BaseURL: baseURL,
+		BaseURL: config.Env.ConnpassURL,
 		Client:  http.DefaultClient,
 	}
 }
