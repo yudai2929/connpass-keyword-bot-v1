@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/config"
 	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/errors"
 	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/interface/di"
@@ -18,13 +19,15 @@ func main() {
 	c := di.BuildContainer()
 
 	err := c.Invoke(func(handler *handler.NotificationHandler) {
-		if err := handler.Send(); err != nil {
-			fmt.Printf("%+v", err)
-		}
+		fmt.Println("Starting the handler...")
+		lambda.Start(handler.Send)
+		fmt.Println("Handler finished.")
 	})
 
 	if err != nil {
 		err = errors.Wrap(err, "failed to invoke the function")
 		fmt.Printf("%+v", err)
 	}
+
+	fmt.Println("Application finished.")
 }
