@@ -9,3 +9,16 @@ services:
     tty: true
     env_file:
       - .env
+  lambda:
+    build:
+      context: ./Docker/lambda
+      dockerfile: Dockerfile
+    image: go-lambda
+    container_name: go-lambda
+    ports:
+      - "9000:8080"
+    volumes:
+      - .:/usr/src/app
+    tty: true
+    env_file:
+      - .env
