@@ -2,7 +2,7 @@ version: "3"
 services:
   go:
     build:
-      context: ./Docker/go
+      context: ./docker/go
       dockerfile: Dockerfile
     volumes:
       - .:/usr/src/app
@@ -11,7 +11,7 @@ services:
       - .env
   lambda:
     build:
-      context: ./Docker/lambda
+      context: ./docker/lambda
       dockerfile: Dockerfile
     image: go-lambda
     container_name: go-lambda
