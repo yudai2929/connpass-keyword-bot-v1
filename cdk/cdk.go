@@ -5,6 +5,8 @@ import (
 	"os/exec"
 
 	"github.com/aws/aws-cdk-go/awscdk"
+	"github.com/aws/aws-cdk-go/awscdk/awsevents"
+	"github.com/aws/aws-cdk-go/awscdk/awseventstargets"
 	"github.com/aws/aws-cdk-go/awscdk/awslambda"
 	"github.com/aws/constructs-go/constructs/v3"
 	"github.com/aws/jsii-runtime-go"
@@ -28,19 +30,36 @@ func NewCdkStack(scope constructs.Construct, id string, props *CdkStackProps) (a
 		return nil, err
 	}
 
-	if err := createLambdaFunction(stack, functionName); err != nil {
+	fn, err := createLambdaFunction(stack, functionName)
+
+	if err != nil {
 		return nil, err
 	}
+
+	ruleName := functionName + "_rule"
+
+	// EventBridgeスケジュールの定義（東京時間で毎日9時）
+	rule := awsevents.NewRule(stack, jsii.String(ruleName), &awsevents.RuleProps{
+		Schedule: awsevents.Schedule_Cron(&awsevents.CronOptions{
+			Minute: jsii.String("0"),
+			Hour:   jsii.String("0"),
+			Day:    jsii.String("*"),
+			Month:  jsii.String("*"),
+			Year:   jsii.String("*"),
+		}),
+	})
+
+	rule.AddTarget(awseventstargets.NewLambdaFunction(fn, &awseventstargets.LambdaFunctionProps{}))
 
 	return stack, nil
 }
 
-func createLambdaFunction(stack awscdk.Stack, functionName string) error {
+func createLambdaFunction(stack awscdk.Stack, functionName string) (awslambda.Function, error) {
 	if err := golangBuild(getCmdPaths(functionName)); err != nil {
-		return err
+		return nil, err
 	}
 
-	awslambda.NewFunction(stack, jsii.String(functionName), &awslambda.FunctionProps{
+	fn := awslambda.NewFunction(stack, jsii.String(functionName), &awslambda.FunctionProps{
 		FunctionName: jsii.String(functionName),
 		Runtime:      awslambda.Runtime_PROVIDED_AL2(),
 		Code:         awslambda.AssetCode_FromAsset(jsii.String("bin/"+functionName), nil),
@@ -55,7 +74,7 @@ func createLambdaFunction(stack awscdk.Stack, functionName string) error {
 		},
 	})
 
-	return nil
+	return fn, nil
 }
 
 func getCmdPaths(functionName string) (string, string) {
