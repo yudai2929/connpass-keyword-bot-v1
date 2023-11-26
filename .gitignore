@@ -3,3 +3,9 @@
 bootstrap
 
 function.zip
+
+.cdk.staging
+cdk.out
+*.out
+
+bin
