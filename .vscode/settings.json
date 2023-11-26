@@ -2,6 +2,8 @@
   "cSpell.words": [
     "APIURL",
     "awscdk",
+    "awsevents",
+    "awseventstargets",
     "awslambda",
     "godotenv",
     "joho",
