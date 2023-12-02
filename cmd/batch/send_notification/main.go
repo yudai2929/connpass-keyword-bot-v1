@@ -4,10 +4,10 @@ import (
 	"fmt"
 
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/yudai2929/connpass-keyword-bot-v1/internal/app/di"
+	job "github.com/yudai2929/connpass-keyword-bot-v1/internal/batch"
 	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/config"
 	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/errors"
-	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/interface/di"
-	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/interface/handler"
 )
 
 func main() {
@@ -18,7 +18,7 @@ func main() {
 
 	c := di.BuildContainer()
 
-	err := c.Invoke(func(handler *handler.NotificationHandler) {
+	err := c.Invoke(func(handler *job.NotificationJob) {
 		fmt.Println("Starting the handler...")
 		lambda.Start(handler.Send)
 		fmt.Println("Handler finished.")
