@@ -9,3 +9,6 @@ cdk.out
 *.out
 
 bin
+
+template.yaml
+.aws-sam

@@ -4,6 +4,7 @@
     "include": ["**"],
     "exclude": ["README.md", "cdk*.json", "go.mod", "go.sum", "**/*test.go"]
   },
+  "output": "cdk/cdk.out",
   "context": {
     "@aws-cdk/aws-lambda:recognizeLayerVersion": true,
     "@aws-cdk/core:checkSecretUsage": true,
