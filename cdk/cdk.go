@@ -91,10 +91,25 @@ func golangBuild(buildPath string, golangPath string) error {
 	return nil
 }
 
+func setupEnv() error {
+	err := godotenv.Load(".env")
+	if err != nil {
+		return nil
+	}
+
+	env := os.Getenv("ENVIRONMENT")
+
+	if env != "dev" && env != "" {
+		return nil
+	}
+
+	return err
+}
+
 func main() {
 	defer jsii.Close()
 
-	if err := godotenv.Load(); err != nil {
+	if err := setupEnv(); err != nil {
 		panic(err)
 	}
 

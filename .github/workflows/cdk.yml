@@ -1,0 +1,49 @@
+name: cdk-github-actions
+
+env:
+  USER_ID: ${{ secrets.USER_ID }}
+  CHANNEL_SECRET: ${{ secrets.CHANNEL_SECRET }}
+  CHANNEL_ACCESS_TOKEN: ${{ secrets.CHANNEL_ACCESS_TOKEN }}
+  CONNPASS_URL: ${{ secrets.CONNPASS_URL }}
+  SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+  SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+  AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  ENVIRONMENT: "prd"
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js # Node.jsをセットアップする
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Setup Go # Goをセットアップする
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.20"
+
+      - name: Install dependencies # 依存ライブラリをインストールする
+        run: |
+          npm install -g aws-cdk
+          go mod tidy
+
+      - name: Configure AWS credentials # GitHubに保存したAWSのSecretsを取り出して設定する
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-1
+
+      - name: Deploy with CDK # 設定の変更をデプロイする
+        run: |
+          cdk deploy
