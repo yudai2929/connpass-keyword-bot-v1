@@ -1,4 +1,4 @@
-name: cdk-github-actions
+name: cdk-deploy
 
 env:
   USER_ID: ${{ secrets.USER_ID }}
@@ -15,7 +15,6 @@ on:
   push:
     branches:
       - "main"
-  pull_request:
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
