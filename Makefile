@@ -17,3 +17,6 @@ start-lambda:
 	@sam local invoke --template template.yaml
 
 
+generate-mock:
+	@echo "Generating mocks"
+	@mockgen -source=pkg/domain/repository/event_repository_interface.go -destination=./mocks/repository/event_repository_mock.go
