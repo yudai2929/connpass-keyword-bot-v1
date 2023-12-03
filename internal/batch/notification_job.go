@@ -1,20 +1,20 @@
-package handler
+package batch
 
 import (
 	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/usecase"
 )
 
-type NotificationHandler struct {
+type NotificationJob struct {
 	NotificationUsecase usecase.NotificationUsecase
 }
 
-func NewNotificationHandler(notificationUsecase usecase.NotificationUsecase) *NotificationHandler {
-	return &NotificationHandler{
+func NewNotificationJob(notificationUsecase usecase.NotificationUsecase) *NotificationJob {
+	return &NotificationJob{
 		NotificationUsecase: notificationUsecase,
 	}
 }
 
-func (h *NotificationHandler) Send() error {
+func (h *NotificationJob) Send() error {
 	if err := h.NotificationUsecase.Send(); err != nil {
 		return err
 	}
