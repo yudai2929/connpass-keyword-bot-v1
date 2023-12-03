@@ -40,6 +40,7 @@ require (
 	github.com/aws/constructs-go/constructs/v3 v3.4.232
 	github.com/aws/jsii-runtime-go v1.91.0
 	github.com/cockroachdb/errors v1.11.1
+	github.com/golang/mock v1.6.0
 	github.com/joho/godotenv v1.5.1
 	github.com/line/line-bot-sdk-go v7.8.0+incompatible
 	go.uber.org/dig v1.17.1
