@@ -2,15 +2,14 @@ package main
 
 import (
 	"os"
-	"os/exec"
 
 	"github.com/aws/aws-cdk-go/awscdk"
 	"github.com/aws/aws-cdk-go/awscdk/awsevents"
 	"github.com/aws/aws-cdk-go/awscdk/awseventstargets"
-	"github.com/aws/aws-cdk-go/awscdk/awslambda"
 	"github.com/aws/constructs-go/constructs/v3"
 	"github.com/aws/jsii-runtime-go"
-	"github.com/joho/godotenv"
+	"github.com/yudai2929/connpass-keyword-bot-v1/cdk/config"
+	"github.com/yudai2929/connpass-keyword-bot-v1/cdk/libs/lambda"
 )
 
 type CdkStackProps struct {
@@ -24,15 +23,26 @@ func NewCdkStack(scope constructs.Construct, id string, props *CdkStackProps) (a
 	}
 	stack := awscdk.NewStack(scope, &id, &sprops)
 
-	functionName := "send_notification"
+	lp := lambda.NewFunctionProps(
+		"bin/send_notification",
+		"cmd/batch/send_notification/main.go",
+		"send_notification",
+	)
 
-	fn, err := createLambdaFunction(stack, functionName)
+	fn, err := lambda.BuildAndCreateFunction(stack, lp, &map[string]*string{
+		"CONNPASS_URL":         jsii.String(os.Getenv("CONNPASS_URL")),
+		"USER_ID":              jsii.String(os.Getenv("USER_ID")),
+		"CHANNEL_SECRET":       jsii.String(os.Getenv("CHANNEL_SECRET")),
+		"CHANNEL_ACCESS_TOKEN": jsii.String(os.Getenv("CHANNEL_ACCESS_TOKEN")),
+		"SUPABASE_URL":         jsii.String(os.Getenv("SUPABASE_URL")),
+		"SUPABASE_KEY":         jsii.String(os.Getenv("SUPABASE_KEY")),
+	})
 
 	if err != nil {
 		return nil, err
 	}
 
-	ruleName := functionName + "_rule"
+	ruleName := lp.FunctionName + "_rule"
 
 	// EventBridgeスケジュールの定義（東京時間で毎日9時）
 	rule := awsevents.NewRule(stack, jsii.String(ruleName), &awsevents.RuleProps{
@@ -50,66 +60,10 @@ func NewCdkStack(scope constructs.Construct, id string, props *CdkStackProps) (a
 	return stack, nil
 }
 
-func createLambdaFunction(stack awscdk.Stack, functionName string) (awslambda.Function, error) {
-	if err := golangBuild(getCmdPaths(functionName)); err != nil {
-		return nil, err
-	}
-
-	fn := awslambda.NewFunction(stack, jsii.String(functionName), &awslambda.FunctionProps{
-		FunctionName: jsii.String(functionName),
-		Runtime:      awslambda.Runtime_PROVIDED_AL2(),
-		Code:         awslambda.AssetCode_FromAsset(jsii.String("bin/"+functionName), nil),
-		Handler:      jsii.String("main"),
-		Environment: &map[string]*string{
-			"CONNPASS_URL":         jsii.String(os.Getenv("CONNPASS_URL")),
-			"USER_ID":              jsii.String(os.Getenv("USER_ID")),
-			"CHANNEL_SECRET":       jsii.String(os.Getenv("CHANNEL_SECRET")),
-			"CHANNEL_ACCESS_TOKEN": jsii.String(os.Getenv("CHANNEL_ACCESS_TOKEN")),
-			"SUPABASE_URL":         jsii.String(os.Getenv("SUPABASE_URL")),
-			"SUPABASE_KEY":         jsii.String(os.Getenv("SUPABASE_KEY")),
-		},
-	})
-
-	return fn, nil
-}
-
-func getCmdPaths(functionName string) (string, string) {
-	buildPath := "bin/" + functionName + "/bootstrap"
-	golangPath := "cmd/batch/" + functionName + "/main.go"
-
-	return buildPath, golangPath
-}
-
-func golangBuild(buildPath string, golangPath string) error {
-	simpleCmd := exec.Command("go", "build", "-tags", " lambda.norpc", "-o", buildPath, golangPath)
-	simpleCmd.Env = append(os.Environ(), "GOOS=linux", "GOARCH=amd64", "CGO_ENABLED=0")
-	_, err := simpleCmd.CombinedOutput()
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func setupEnv() error {
-	err := godotenv.Load(".env")
-	if err != nil {
-		return nil
-	}
-
-	env := os.Getenv("ENVIRONMENT")
-
-	if env != "dev" && env != "" {
-		return nil
-	}
-
-	return err
-}
-
 func main() {
 	defer jsii.Close()
 
-	if err := setupEnv(); err != nil {
+	if err := config.SetupEnv(); err != nil {
 		panic(err)
 	}
 
