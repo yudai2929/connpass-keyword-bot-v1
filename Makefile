@@ -2,7 +2,7 @@ exec:
 	go run cmd/app/main.go
 
 deploy:
-	cd cdk && cdk deploy
+	cdk deploy
 
 
 create-sam-template:
