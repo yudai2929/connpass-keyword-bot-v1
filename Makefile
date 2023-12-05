@@ -16,6 +16,9 @@ start-lambda:
 	@cdk synth --no-staging > template.yaml
 	@sam local invoke --template template.yaml
 
+start-lambda-only:
+	@echo "Starting Lambda"
+	@sam local invoke --template template.yaml
 
 generate-mock:
 	@echo "Generating mocks"
