@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/domain/entity"
+	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/domain/factory"
 	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/domain/repository"
 	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/utils"
 )
@@ -34,7 +35,9 @@ func (uc *notificationUsecase) Send() error {
 		return err
 	}
 
-	eventIDs := getEventIDs(events)
+	eventIDs := utils.Map(events, func(event entity.Event) int {
+		return event.EventID
+	})
 
 	notifiedEventIDs, err := uc.notifiedEventRepo.FindByEventIDs(eventIDs)
 
@@ -42,53 +45,25 @@ func (uc *notificationUsecase) Send() error {
 		return err
 	}
 
-	notNotifiedEvents := findNotNotifiedEvents(events, notifiedEventIDs)
+	notNotifiedEvents := utils.Filter(events, func(event entity.Event) bool {
+		return !utils.Contains(notifiedEventIDs, event.EventID)
+	})
 
-	messages := createMessage(notNotifiedEvents)
+	messages := utils.Map(notNotifiedEvents, func(event entity.Event) entity.Message {
+		return factory.CreateMessage(event)
+	})
 
 	if err := uc.messageRepo.Send(messages); err != nil {
 		return err
 	}
 
-	notNotifiedEventIDs := getEventIDs(notNotifiedEvents)
+	notNotifiedEventIDs := utils.Map(notNotifiedEvents, func(event entity.Event) int {
+		return event.EventID
+	})
 
 	if err := uc.notifiedEventRepo.Save(notNotifiedEventIDs); err != nil {
 		return err
 	}
 
 	return nil
-}
-
-func getEventIDs(events []entity.Event) []int {
-	eventIDs := []int{}
-
-	for _, event := range events {
-		eventIDs = append(eventIDs, event.EventID)
-	}
-
-	return eventIDs
-}
-
-func findNotNotifiedEvents(events []entity.Event, notifiedEventIDs []int) []entity.Event {
-	notNotifiedEvents := []entity.Event{}
-
-	for _, event := range events {
-		if !utils.Contains(notifiedEventIDs, event.EventID) {
-			notNotifiedEvents = append(notNotifiedEvents, event)
-		}
-	}
-
-	return notNotifiedEvents
-}
-
-func createMessage(events []entity.Event) []entity.Message {
-	messages := []entity.Message{}
-
-	for _, event := range events {
-		messages = append(messages, entity.Message{
-			Text: event.Title + "\n" + event.EventURL,
-		})
-	}
-
-	return messages
 }
