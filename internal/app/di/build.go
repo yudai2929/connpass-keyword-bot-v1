@@ -18,6 +18,7 @@ func BuildContainer() *dig.Container {
 	c.Provide(supabase.NewNotifiedEventRepository)
 	c.Provide(external.NewEventRepository)
 	c.Provide(line.NewMessageRepository)
+	c.Provide(external.NewLocationRepository)
 	c.Provide(usecase.NewNotificationUsecase)
 	c.Provide(batch.NewNotificationJob)
 

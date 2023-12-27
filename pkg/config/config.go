@@ -11,6 +11,7 @@ type EnvVars struct {
 	ChannelAccessToken string
 	SupabaseURL        string
 	SupabaseKey        string
+	YahooClientID      string
 }
 
 var Env *EnvVars = &EnvVars{}
@@ -23,6 +24,7 @@ func Load() error {
 	Env.ChannelAccessToken = os.Getenv("CHANNEL_ACCESS_TOKEN")
 	Env.SupabaseURL = os.Getenv("SUPABASE_URL")
 	Env.SupabaseKey = os.Getenv("SUPABASE_KEY")
+	Env.YahooClientID = os.Getenv("YAHOO_CLIENT_ID")
 
 	return nil
 }
