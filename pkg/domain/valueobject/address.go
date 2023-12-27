@@ -5,8 +5,8 @@ type Address struct {
 	City       string
 }
 
-func NewAddress(prefecture string, city string) *Address {
-	return &Address{
+func NewAddress(prefecture string, city string) Address {
+	return Address{
 		Prefecture: prefecture,
 		City:       city,
 	}

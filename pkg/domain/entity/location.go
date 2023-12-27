@@ -7,9 +7,9 @@ type Location struct {
 	valueobject.Address
 }
 
-func NewLocation(latitude valueobject.Coordinate, longitude valueobject.Coordinate, address valueobject.Address) Location {
+func NewLocation(coordinate valueobject.Coordinate, address valueobject.Address) Location {
 	return Location{
-		Coordinate: latitude,
+		Coordinate: coordinate,
 		Address:    address,
 	}
 }
