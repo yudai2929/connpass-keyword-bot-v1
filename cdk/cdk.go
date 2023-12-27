@@ -36,6 +36,7 @@ func NewCdkStack(scope constructs.Construct, id string, props *CdkStackProps) (a
 		"CHANNEL_ACCESS_TOKEN": jsii.String(os.Getenv("CHANNEL_ACCESS_TOKEN")),
 		"SUPABASE_URL":         jsii.String(os.Getenv("SUPABASE_URL")),
 		"SUPABASE_KEY":         jsii.String(os.Getenv("SUPABASE_KEY")),
+		"YAHOO_CLIENT_ID":      jsii.String(os.Getenv("YAHOO_CLIENT_ID")),
 	})
 
 	if err != nil {
