@@ -1,6 +1,8 @@
 package batch
 
 import (
+	"fmt"
+
 	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/usecase"
 )
 
@@ -16,6 +18,7 @@ func NewNotificationJob(notificationUsecase usecase.NotificationUsecase) *Notifi
 
 func (h *NotificationJob) Send() error {
 	if err := h.NotificationUsecase.Send(); err != nil {
+		fmt.Printf("%+v", err)
 		return err
 	}
 

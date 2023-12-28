@@ -1,8 +1,6 @@
 package usecase
 
 import (
-	"fmt"
-
 	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/domain/entity"
 	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/domain/factory"
 	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/domain/repository"
@@ -44,8 +42,6 @@ func (uc *notificationUsecase) Send() error {
 	}
 
 	eventsInAichi, err := uc.getEventsInAichi(events)
-
-	fmt.Println("eventsInAichi", eventsInAichi)
 
 	if err != nil {
 		return err

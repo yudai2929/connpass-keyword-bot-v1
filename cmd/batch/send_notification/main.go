@@ -21,7 +21,6 @@ func main() {
 	err := c.Invoke(func(handler *batch.NotificationJob) {
 		fmt.Println("Starting the handler...")
 		lambda.Start(handler.Send)
-		fmt.Println("Handler finished.")
 	})
 
 	if err != nil {
