@@ -9,6 +9,8 @@ env:
   SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
   AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  YAHOO_CLIENT_ID: ${{ secrets.YAHOO_CLIENT_ID }}
+
   ENVIRONMENT: "prd"
 
 on:
