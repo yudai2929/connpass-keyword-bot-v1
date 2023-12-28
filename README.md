@@ -21,6 +21,12 @@ make start-lambda
 make deploy
 ```
 
+テスト
+
+```bash
+make test
+```
+
 SAM テンプレートの作成
 
 ```bash

@@ -23,3 +23,8 @@ start-lambda-only:
 generate-mock:
 	@echo "Generating mocks"
 	@mockgen -source=pkg/domain/repository/event_repository_interface.go -destination=./mocks/repository/event_repository_mock.go
+
+
+test:
+	@echo "Running tests"
+	@go test -cover ./pkg/...
