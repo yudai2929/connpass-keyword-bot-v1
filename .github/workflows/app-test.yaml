@@ -21,4 +21,4 @@ jobs:
         run: go build -v ./...
 
       - name: Test with the Go CLI
-        run: go test
+        run: make test
