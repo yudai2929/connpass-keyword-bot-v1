@@ -88,6 +88,10 @@ func (uc *notificationUsecase) getEventsInAichi(events []entity.Event) ([]entity
 	eventsInAichi := []entity.Event{}
 
 	for _, event := range events {
+		if event.Coordinate == nil {
+			continue
+		}
+
 		location, err := uc.locationRepo.SearchByCoordinate(*event.Coordinate)
 		if err != nil {
 			return nil, err
