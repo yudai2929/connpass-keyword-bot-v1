@@ -4,7 +4,7 @@ import (
 	"github.com/aws/aws-cdk-go/awscdk"
 	"github.com/aws/aws-cdk-go/awscdk/awslambda"
 	"github.com/aws/jsii-runtime-go"
-	"github.com/yudai2929/connpass-keyword-bot-v1/cdk/utils"
+	"github.com/yudai2929/connpass-keyword-bot-v1/cdk/utils/build"
 )
 
 type FunctionProps struct {
@@ -26,7 +26,7 @@ func NewFunctionProps(buildDir string, golangPath string, functionName string) F
 }
 
 func BuildAndCreateFunction(stack awscdk.Stack, props FunctionProps, env *map[string]*string) (awslambda.Function, error) {
-	if err := utils.GolangBuild(props.BuildOutputPath, props.GolangPath); err != nil {
+	if err := build.Golang(props.BuildOutputPath, props.GolangPath); err != nil {
 		return nil, err
 	}
 

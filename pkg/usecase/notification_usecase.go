@@ -4,7 +4,7 @@ import (
 	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/domain/entity"
 	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/domain/factory"
 	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/domain/repository"
-	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/utils"
+	"github.com/yudai2929/connpass-keyword-bot-v1/pkg/utils/slice"
 )
 
 type NotificationUsecase interface {
@@ -51,7 +51,7 @@ func (uc *notificationUsecase) Send() error {
 		return nil
 	}
 
-	eventIDs := utils.Map(eventsInAichi, func(event entity.Event) int {
+	eventIDs := slice.Map(eventsInAichi, func(event entity.Event) int {
 		return event.EventID
 	})
 
@@ -61,11 +61,11 @@ func (uc *notificationUsecase) Send() error {
 		return err
 	}
 
-	notNotifiedEvents := utils.Filter(eventsInAichi, func(event entity.Event) bool {
-		return !utils.Contains(notifiedEventIDs, event.EventID)
+	notNotifiedEvents := slice.Filter(eventsInAichi, func(event entity.Event) bool {
+		return !slice.Contains(notifiedEventIDs, event.EventID)
 	})
 
-	messages := utils.Map(notNotifiedEvents, func(event entity.Event) entity.Message {
+	messages := slice.Map(notNotifiedEvents, func(event entity.Event) entity.Message {
 		return factory.CreateMessage(event)
 	})
 
@@ -73,7 +73,7 @@ func (uc *notificationUsecase) Send() error {
 		return err
 	}
 
-	notNotifiedEventIDs := utils.Map(notNotifiedEvents, func(event entity.Event) int {
+	notNotifiedEventIDs := slice.Map(notNotifiedEvents, func(event entity.Event) int {
 		return event.EventID
 	})
 
@@ -88,6 +88,10 @@ func (uc *notificationUsecase) getEventsInAichi(events []entity.Event) ([]entity
 	eventsInAichi := []entity.Event{}
 
 	for _, event := range events {
+		if event.Coordinate == nil {
+			continue
+		}
+
 		location, err := uc.locationRepo.SearchByCoordinate(*event.Coordinate)
 		if err != nil {
 			return nil, err
